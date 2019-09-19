@@ -1,8 +1,9 @@
 {
   "dependencies": {
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.19.0",
     "compression": "^1.7.1",
     "eosjs": "^16.0.9",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "request-json": "^0.6.4"
   }
 }

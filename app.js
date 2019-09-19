@@ -19,23 +19,38 @@ app.enable('trust proxy')
 const compression = require('compression')
 app.use(compression())
 
+// Force body-parser to parse data as JSON
+const bodyParser = require('body-parser')
+const typeis = require('type-is')
+app.use(bodyParser.json({ type: function(req) {
+  if (undefined === req.headers['content-type']) {
+    // cleos POST data without content-type
+    return true
+  } else {
+    return Boolean(typeis(req, 'application/json'))
+  }
+}}))
+
 app.use((req, res, next) => {
   res.set('Access-Control-Allow-Origin', '*')
   req.setEncoding('utf8')
   res.setHeader('X-Powered-By', 'MeetOne')
 
-  req.rawBody = ''
-  req.on('data', (chunk) => {
-    req.rawBody += chunk
-  })
-  req.on('end', () => {
-    try {
-      req.body = JSON.parse(req.rawBody)
-    } catch (err) {
-      req.body = null
-    }
-    next()
-  })
+  next()
+
+  // Force body-parser to parse data as JSON, old method
+  // req.rawBody = ''
+  // req.on('data', (chunk) => {
+  //   req.rawBody += chunk
+  // })
+  // req.on('end', () => {
+  //   try {
+  //     req.body = JSON.parse(req.rawBody)
+  //   } catch (err) {
+  //     req.body = null
+  //   }
+  //   next()
+  // })
 })
 
 /**
